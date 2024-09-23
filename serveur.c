@@ -1,27 +1,56 @@
 #include "minitalk.h"
 
+void	ft_bzero(void *str, size_t n)
+{
+	size_t	i;
+	char	*s;
+
+	i = 0;
+	s = (char *)str;
+	while (i < n)
+	{
+		s[i] = '\0';
+		i++;
+	}
+}
+
+void    decrypt_msg(int signal)
+{
+    static int i;
+    static unsigned char    strbit[256];
+
+    if (signal == SIGUSR1)
+        strbit[i] = '0';
+    if (signal == SIGUSR2)
+        strbit[i] = '1';
+    i++;
+    ft_printf("%s\n", strbit);
+}
+
 void    signal_manager(int signal)
 {
-    int msgsize;
+    if (signal == SIGUSR1 || signal == SIGUSR2)
+        decrypt_msg(signal);
+}
 
-    msgsize = 0;
-    if (signal == SIGUSR1)
-        msgsize++;
-    ft_printf("%d\n", msgsize);
+void    set_signal_action(void)
+{
+    struct sigaction action;
 
+    ft_bzero(&action, sizeof(action));
+    action.sa_handler = &signal_manager;
+    sigaction(SIGUSR1, &action, NULL);
+    sigaction(SIGUSR2, &action, NULL);
 }
 
 int main(void)
 {
     pid_t serverpid;
-    struct sigaction action_sigusr1;
 
     serverpid = getpid();
     ft_printf("%d\n", serverpid);
-    action_sigusr1.sa_handler = signal_manager;
-    sigemptyset(&action_sigusr1.sa_mask);
-    action_sigusr1.sa_flags = 0;
-    sigaction(SIGUSR1, &action_sigusr1, NULL);
+
+    set_signal_action();
     while (1)
         continue ;
     return (0);
