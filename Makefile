@@ -1,7 +1,7 @@
 NAMESERVER = serveur
 NAMECLIENT = client
 
-SRCSERVER = serveur.c
+SRCSERVER = serveur2.c
 SRCCLIENT = client.c
 PRINTF_SRC = ft_printf/ft_printf.c ft_printf/ft_hex.c ft_printf/ft_ptr.c ft_printf/ft_putcharstr.c ft_printf/ft_itoa.c ft_printf/ft_unsigned_itoa.c ft_printf/ft_strlen.c
 

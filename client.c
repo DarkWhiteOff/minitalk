@@ -32,8 +32,6 @@ void	decimal_to_bits(unsigned char c, unsigned char *strbit, int msgsize)
 	static int	j;
 
 	i = 7;
-	//if (j != 0)
-	//	strbit[j++] = ' ';
 	while (i >= 0)
 	{
 		strbit[j] = (c >> i & 1) + '0';
@@ -42,7 +40,6 @@ void	decimal_to_bits(unsigned char c, unsigned char *strbit, int msgsize)
 	}
 	if (j == msgsize * 8)
 		strbit[j] = '\0';
-	ft_printf("j : %d c : %c (%d)\n", j, c, c);
 }
 
 int main(int    argc, char  *argv[])
@@ -51,33 +48,59 @@ int main(int    argc, char  *argv[])
 	int	msgsize;
 	unsigned char	*strbit;
 	int	i;
+	char	c;
 
 	serverpid = ft_atoi(argv[1]);
 	msgsize = ft_strlen(argv[2]);
-	strbit = malloc(sizeof(unsigned char) * msgsize * 10);
+	strbit = malloc(sizeof(unsigned char) * msgsize * 8 + 1);
 	i = 0;
 	while (i < msgsize)
 	{
 		decimal_to_bits(argv[2][i], strbit, msgsize);
 		i++;
-		ft_printf("%s\n", strbit);
 	}
 	i = 0;
 	while (strbit[i] != '\0')
 		i++;
-	ft_printf("str size : %d\n", i);
+	i = 0;
+	if (strbit[i] == '0')
+	{
+		kill(serverpid, SIGUSR1);
+		usleep(0);
+		c = '0';
+	}
+	else if (strbit[i] == '1')
+	{
+		kill(serverpid, SIGUSR2);
+		usleep(0);
+		c = '1';
+	}
+	while (i < msgsize)
+	{
+		if (c == '0')
+		{
+			kill(serverpid, SIGUSR2);
+			usleep(0);
+		}
+		else if (c == '1')
+		{
+			kill(serverpid, SIGUSR1);
+			usleep(0);
+		}
+		i++;
+	}
 	i = 0;
 	while (strbit[i] != '\0')
 	{
 		if (strbit[i] == '0')
 		{
 			kill(serverpid, SIGUSR1);
-			ft_printf("0");
+			usleep(0);
 		}
 		if (strbit[i] == '1')
 		{
 			kill(serverpid, SIGUSR2);
-			ft_printf("1");
+			usleep(0);
 		}
 		i++;
 	}
