@@ -26,34 +26,6 @@ int	ft_atoi(const char *str)
 	return (nbr * sign);
 }
 
-char	*ft_strdup(const char *s)
-{
-	int		i;
-	char	*ss;
-	char	*dest;
-
-	i = 0;
-	ss = (char *)s;
-	while (ss[i] != '\0')
-		i++;
-	dest = (char *)malloc(sizeof(char) * i + 1);
-	if (dest == NULL)
-		return (NULL);
-	i = 0;
-	while (ss[i] != '\0')
-	{
-		dest[i] = ss[i];
-		i++;
-	}
-	dest[i] = '\0';
-    while (i >= 0)
-    {
-        dest[i] = '\0';
-        i--;
-    }
-	return (dest);
-}
-
 void	print_bits(unsigned char octet)
 {
 	int	i;
@@ -114,13 +86,13 @@ void    decrypt_msg(unsigned char bit, int size)
         unsigned char *bit;
         int octet;
 
-        bit = malloc(sizeof(unsigned char) * 9);
         i = 0;
-        octet = 0;
         while (i != size * 8)
         {
             j = i;
             k = 0;
+            octet = 0;
+            bit = malloc(sizeof(unsigned char) * 9);
             while (i < j + 8)
             {
                 bit[k] = strbit[i];
@@ -129,9 +101,14 @@ void    decrypt_msg(unsigned char bit, int size)
             }
             bit[k] = '\0';
             octet = ft_atoi(bit);
+            free(bit);
             binary_to_decimal(octet);
-            if (i == size * 8)
-                reset_vars();
+        }
+        if (i == size * 8)
+        {
+            free(strbit);
+            strbit == NULL;
+            i = 0;
         }
     }
 }
@@ -141,6 +118,7 @@ void    signal_manager(int signal)
     static int check = 1;
     static char c;
     static int size;
+    static int counter;
 
     if (check == 1)
     {
@@ -172,9 +150,27 @@ void    signal_manager(int signal)
             c = '3';
     }
     if (signal == SIGUSR1)
+    {
         decrypt_msg('0', size);
+        counter++;
+        if (counter == size * 8)
+        {
+            check = 1;
+            size = 0;
+            counter = 0;
+        }
+    }
     if (signal == SIGUSR2)
+    {
         decrypt_msg('1', size);
+        counter++;
+        if (counter == size * 8)
+        {
+            check = 1;
+            size = 0;
+            counter = 0;
+        }
+    }
 }
 
 int main(void)

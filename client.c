@@ -104,5 +104,6 @@ int main(int    argc, char  *argv[])
 		}
 		i++;
 	}
+	free(strbit);
     return (0);
 }
