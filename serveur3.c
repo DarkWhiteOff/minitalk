@@ -26,11 +26,12 @@ int	ft_atoi(const char *str)
 	return (nbr * sign);
 }
 
-char    binary_to_decimal(char *octet)
+void    binary_to_decimal(char *octet)
 {
     int somme;
     int i;
     int val_bi;
+    char letter;
 
     i = 0;
     val_bi = 128;
@@ -42,46 +43,27 @@ char    binary_to_decimal(char *octet)
         val_bi /= 2;
         i++;
     }
-    return (somme);
-}
-
-void    ft_putcharok(char c)
-{
-    write(1, &c, 1);
+	ft_printf("%c", somme);
 }
 
 void    signal_manager(int signal)
 {
     static int  i;
-    static char octet[9];
-    char letter;
-    static int check = 1;
+    static char *octet;
 
-    //if (octet == NULL)
-    //    octet = malloc(sizeof(char) * 9);
-    if (check == 1)
-    {
-        octet[8] = '\0';
-        while (octet[i] != '\0')
-        {
-            octet[i] = '0';
-            i++;
-        }
-        i = 0;
-        check = 0;
-    }
+    if (octet == NULL)
+        octet = malloc(sizeof(char) * 9);
     if (signal == SIGUSR1)
         octet[i++] = '0';
     else if (signal == SIGUSR2)
         octet[i++] = '1';
     if (i == 8)
     {
-        letter = binary_to_decimal(octet);
-        ft_putcharok(letter);
-        //free(octet);
-        //octet = NULL;
+        octet[8] = '\0';
+        binary_to_decimal(octet);
         i = 0;
-        check = 1;
+        free(octet);
+        octet = NULL;
     }
 }
 
@@ -94,6 +76,6 @@ int main(void)
     signal(SIGUSR1, signal_manager);
     signal(SIGUSR2, signal_manager);
     while (1)
-        continue ;
+        pause();
     return (0);
 }

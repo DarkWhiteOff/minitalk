@@ -58,12 +58,19 @@ void	send_msg(pid_t serverpid, char *msg)
 		while (octet[j] != '\0')
 		{
 			if (octet[j] == '0')
+			{
 				kill(serverpid, SIGUSR1);
+				//usleep(7000);
+			}
 			else if (octet[j] == '1')
+			{
 				kill(serverpid, SIGUSR2);
-			usleep(200);
+				//usleep(7000);
+			}
+			usleep(2500);
 			j++;
 		}
+		usleep(1500);
 		free(octet);
 		j = 0;
 		i++;
