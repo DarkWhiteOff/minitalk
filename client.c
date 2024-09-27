@@ -26,7 +26,7 @@ int	ft_atoi(const char *str)
 	return (nbr * sign);
 }
 
-void	decimal_to_bits(unsigned char c, unsigned char *strbit, int msgsize)
+void	decimal_to_bits(unsigned char c, unsigned char *strbitok, int msgsize)
 {
 	int	i;
 	static int	j;
@@ -34,76 +34,80 @@ void	decimal_to_bits(unsigned char c, unsigned char *strbit, int msgsize)
 	i = 7;
 	while (i >= 0)
 	{
-		strbit[j] = (c >> i & 1) + '0';
+		strbitok[j] = (c >> i & 1) + '0';
 		i--;
 		j++;
 	}
 	if (j == msgsize * 8)
-		strbit[j] = '\0';
+		strbitok[j] = '\0';
 }
 
 int main(int    argc, char  *argv[])
 {
     pid_t   serverpid;
 	int	msgsize;
-	unsigned char	*strbit;
+	unsigned char	*strbitok;
 	int	i;
-	char	c;
+	int	c = 0;
 
 	serverpid = ft_atoi(argv[1]);
 	msgsize = ft_strlen(argv[2]);
-	strbit = malloc(sizeof(unsigned char) * msgsize * 8 + 1);
+	strbitok = malloc(sizeof(unsigned char) * msgsize * 8 + 1);
 	i = 0;
 	while (i < msgsize)
 	{
-		decimal_to_bits(argv[2][i], strbit, msgsize);
+		decimal_to_bits(argv[2][i], strbitok, msgsize);
 		i++;
 	}
 	i = 0;
-	while (strbit[i] != '\0')
-		i++;
-	i = 0;
-	if (strbit[i] == '0')
+	if (strbitok[i] == '0')
 	{
 		kill(serverpid, SIGUSR1);
-		usleep(0);
-		c = '0';
+		usleep(6);
+		c = 0;
+		//ft_printf("First signal sent : SIGUSR1 -> c : %d\n", c);
 	}
-	else if (strbit[i] == '1')
+	else if (strbitok[i] == '1')
 	{
 		kill(serverpid, SIGUSR2);
-		usleep(0);
-		c = '1';
+		usleep(6);
+		c = 1;
+		//ft_printf("First signal sent : SIGUSR2 -> c : %d\n", c);
 	}
 	while (i < msgsize)
 	{
-		if (c == '0')
+		if (c == 0)
 		{
 			kill(serverpid, SIGUSR2);
-			usleep(0);
+			usleep(6);
+			//ft_printf("Sending SIGUSR2 for size -> c : %d\n", c);
 		}
-		else if (c == '1')
+		else if (c == 1)
 		{
 			kill(serverpid, SIGUSR1);
-			usleep(0);
+			usleep(6);
+			//ft_printf("Sending SIGUSR1 for size -> c : %d\n", c);
 		}
 		i++;
 	}
 	i = 0;
-	while (strbit[i] != '\0')
+	while (strbitok[i] != '\0')
 	{
-		if (strbit[i] == '0')
+		if (strbitok[i] == '0')
 		{
 			kill(serverpid, SIGUSR1);
-			usleep(0);
+			usleep(6);
+			//ft_printf("Sending SIGUSR1");
 		}
-		if (strbit[i] == '1')
+		else if (strbitok[i] == '1')
 		{
 			kill(serverpid, SIGUSR2);
-			usleep(0);
+			usleep(6);
+			//ft_printf("Sending SIGUSR2");
 		}
 		i++;
+		//ft_printf(" i : %d\n", i);
 	}
-	free(strbit);
-    return (0);
+	free(strbitok);
+	return (0);
 }

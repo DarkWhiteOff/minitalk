@@ -35,15 +35,10 @@ void	print_bits(unsigned char octet)
 	while (i >= 0)
 	{
 		bit = (octet >> i & 1) + '0';
-        ft_printf("%c", bit);
+        //ft_printf("%c", bit);
 		i--;
 	}
-    ft_printf("\n");
-}
-
-void    reset_vars()
-{
-    
+    //ft_printf("\n");
 }
 
 void binary_to_decimal(int octet)
@@ -68,10 +63,21 @@ void binary_to_decimal(int octet)
 
 }
 
+/* int l = 0;
+    while (l < i)
+    {
+        write(1, &strbit[l], 1);
+        l++;
+    } */
+////ft_printf("strbit : %s\n", strbit);
+
 void    decrypt_msg(unsigned char bit, int size)
 {
     static int i;
     static unsigned char    *strbit;
+    int k;
+    unsigned char *octet;
+    int octet2;
 
     if (strbit == NULL)
         strbit = malloc(sizeof(unsigned char) * (size * 8) + 1);
@@ -81,94 +87,110 @@ void    decrypt_msg(unsigned char bit, int size)
         strbit[i++] = bit;
     if (i == size * 8)
     {
-        int j;
-        int k;
-        unsigned char *bit;
-        int octet;
-
+        //ft_printf("i when entering : %d\n", i);
+        strbit[i] = '\0';
         i = 0;
-        while (i != size * 8)
+        while (strbit[i] != '\0')
         {
-            j = i;
             k = 0;
-            octet = 0;
-            bit = malloc(sizeof(unsigned char) * 9);
-            while (i < j + 8)
+            octet2 = 0;
+            octet = malloc(sizeof(unsigned char) * 9);
+            while (k < 8)
             {
-                bit[k] = strbit[i];
+                octet[k] = strbit[i];
                 i++;
                 k++;
             }
-            bit[k] = '\0';
-            octet = ft_atoi(bit);
-            free(bit);
-            binary_to_decimal(octet);
+            octet[k] = '\0';
+            octet2 = ft_atoi(octet);
+            free(octet);
+            //ft_printf("octet2 : %d ", octet2);
+            binary_to_decimal(octet2);
         }
-        if (i == size * 8)
-        {
-            free(strbit);
-            strbit == NULL;
-            i = 0;
-        }
+        //ft_printf("i when leaving : %d\n", i);
+        //ft_printf("strbit when leaving : %s\n", strbit);
+        ft_printf("\n");
+        free(strbit);
+        strbit = NULL;
+        i = 0;
     }
 }
 
 void    signal_manager(int signal)
 {
     static int check = 1;
-    static char c;
+    static int c = 4;
     static int size;
     static int counter;
 
     if (check == 1)
     {
         if (signal == SIGUSR1)
-            c = '0';
+            c = 0;
         if (signal == SIGUSR2)
-            c = '1';
+            c = 1;
         check = 0;
+        //ft_printf("Checking first signal -> c : %d / size : %d / check : %d\n", c, size, check);
         return ;
     }
-    if (c == '0')
+    if (c == 0)
+    {
+        if (signal == SIGUSR2)
+        {
+            size++;
+            //ft_printf("SIGUSR2 recieved -> c : %d / check : %d\n", c, check);
+            return ;
+        }
+        else if (signal == SIGUSR1)
+        {
+            c = 3;
+            //ft_printf("SIGUSR1 recieved -> c : %d / check : %d\n", c, check);
+        }
+    }
+    else if (c == 1)
     {
         if (signal == SIGUSR1)
-            c = '3';
-        if (signal == SIGUSR2)
         {
             size++;
             return ;
         }
+        else if (signal == SIGUSR2)
+            c = 3;
     }
-    if ( c == '1')
-    {
-        if (signal == SIGUSR1)
-        {
-            size++;
-            return ;
-        }
-        if (signal == SIGUSR2)
-            c = '3';
-    }
+    //ft_printf("size : %d\n", size);
     if (signal == SIGUSR1)
     {
         decrypt_msg('0', size);
         counter++;
+        //ft_printf("SIGUSR1 recieved -> counter : %d\n", counter);
         if (counter == size * 8)
         {
+            //ft_printf("Reset vars entred\n");
             check = 1;
+            c = 4;
             size = 0;
             counter = 0;
+            //ft_printf("Checking vars -> check : %d / c : %d / size : %d / counter : %d\n", check, c, size, counter);
+            //ft_printf("Exiting process\n");
+            usleep(6);
+            //exit(0);
         }
     }
-    if (signal == SIGUSR2)
+    else if (signal == SIGUSR2)
     {
         decrypt_msg('1', size);
         counter++;
+        //ft_printf("SIGUSR2 recieved -> counter : %d\n", counter);
         if (counter == size * 8)
         {
+            //ft_printf("Reset vars entred\n");
             check = 1;
             size = 0;
             counter = 0;
+            //ft_printf("Checking vars -> check : %d / c : %d / size : %d / counter : %d\n", check, c, size, counter);
+            //ft_printf("Exiting process\n");
+            usleep(6);
+            //exit(0);
         }
     }
 }

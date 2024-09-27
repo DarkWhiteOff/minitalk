@@ -8,12 +8,7 @@
 # include <stdio.h>
 
 // MINITALK
-int	ft_atoi(const char *str);
-void	decimal_to_bits(unsigned char c, unsigned char *strbit, int msgsize);
-char	*ft_strdup(const char *s);
-void	print_bits(unsigned char octet);
-void    decrypt_msg(unsigned char bit, int size);
-void    signal_manager(int signal);
+
 
 // FT_PRINTF
 int					ft_printf(const char *str, ...);
