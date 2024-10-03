@@ -10,6 +10,10 @@
 // MINITALK
 
 
+// LIBFT
+int					ft_atoi(const char *str);
+int					ft_isspace(int c);
+
 // FT_PRINTF
 int					ft_printf(const char *str, ...);
 int					get_next_arg(va_list *ap, char c);
