@@ -7,9 +7,6 @@
 # include <unistd.h>
 # include <stdio.h>
 
-// MINITALK
-
-
 // LIBFT
 int					ft_atoi(const char *str);
 int					ft_isspace(int c);

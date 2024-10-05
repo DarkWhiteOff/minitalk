@@ -1,13 +1,20 @@
 NAMESERVER = serveur
 NAMECLIENT = client
 
+NAMESERVER_BONUS = serveur_bonus
+NAMECLIENT_BONUS = client_bonus
+
 SRCSERVER = serveur.c
 SRCCLIENT = client.c
+SRCSERVER_BONUS = serveur_bonus.c
+SRCCLIENT_BONUS = client_bonus.c
 PRINTF_SRC = ft_printf/ft_printf.c ft_printf/ft_hex.c ft_printf/ft_ptr.c ft_printf/ft_putcharstr.c ft_printf/ft_itoa.c ft_printf/ft_unsigned_itoa.c ft_printf/ft_strlen.c
 LIBFT_SRC = libft/ft_atoi.c libft/ft_isspace.c
 
 OBJSSERVER := $(SRCSERVER:%.c=%.o)
 OBJSCLIENT := $(SRCCLIENT:%.c=%.o)
+OBJSSERVER_BONUS := $(SRCSERVER_BONUS:%.c=%.o)
+OBJSCLIENT_BONUS := $(SRCCLIENT_BONUS:%.c=%.o)
 PRINTF_OBJS := $(PRINTF_SRC:%.c=%.o)
 LIBFT_OBJS := $(LIBFT_SRC:%.c=%.o)
 
@@ -16,16 +23,24 @@ FLAGS = -Wall -Wextra -Werror
 
 all: $(NAMESERVER) $(NAMECLIENT)
 
+bonus : $(NAMESERVER_BONUS) $(NAMECLIENT_BONUS)
+
 $(NAMESERVER) : $(OBJSSERVER) $(PRINTF_OBJS) $(LIBFT_OBJS)
 	$(CC) $(FLAGS) $(OBJSSERVER) $(PRINTF_OBJS) $(LIBFT_OBJS) -o $(NAMESERVER)
 
-$(NAMECLIENT) : $(OBJSCLIENT) $(PRINTF_OBJS)
+$(NAMECLIENT) : $(OBJSCLIENT) $(PRINTF_OBJS) $(LIBFT_OBJS)
 	$(CC) $(FLAGS) $(OBJSCLIENT) $(PRINTF_OBJS) $(LIBFT_OBJS) -o $(NAMECLIENT)
 
+$(NAMESERVER_BONUS) : $(OBJSSERVER_BONUS) $(PRINTF_OBJS) $(LIBFT_OBJS)
+	$(CC) $(FLAGS) $(OBJSSERVER_BONUS) $(PRINTF_OBJS) $(LIBFT_OBJS) -o $(NAMESERVER_BONUS)
+
+$(NAMECLIENT_BONUS) : $(OBJSCLIENT_BONUS) $(PRINTF_OBJS) $(LIBFT_OBJS)
+	$(CC) $(FLAGS) $(OBJSCLIENT_BONUS) $(PRINTF_OBJS) $(LIBFT_OBJS) -o $(NAMECLIENT_BONUS)
+
 clean:
-	rm -rf $(OBJSSERVER) $(OBJSCLIENT) $(PRINTF_OBJS) $(LIBFT_OBJS)
+	rm -rf $(OBJSSERVER) $(OBJSCLIENT) $(OBJSSERVER_BONUS) $(OBJSCLIENT_BONUS) $(PRINTF_OBJS) $(LIBFT_OBJS)
 
 fclean: clean
-	rm -rf $(NAMESERVER) $(NAMECLIENT)
+	rm -rf $(NAMESERVER) $(NAMECLIENT) $(NAMESERVER_BONUS) $(NAMECLIENT_BONUS)
 
 re: fclean all

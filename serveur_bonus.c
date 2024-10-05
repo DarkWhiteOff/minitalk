@@ -1,6 +1,6 @@
 #include "minitalk.h"
 
-void	signal_manager_server(int signal)
+void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 {
 	static int	i;
 	static char	octet;
@@ -13,7 +13,11 @@ void	signal_manager_server(int signal)
 	if (i == 8)
 	{
 		if (octet == 0)
+		{
 			ft_printf("\n");
+			kill(info->si_pid, SIGUSR1);
+			usleep(420);
+		}
 		else
 			ft_printf("%c", octet);
 		i = 0;
@@ -31,8 +35,8 @@ int	main(void)
 	serverpid = getpid();
 	ft_printf("Server ID : %d\n", serverpid);
 	sigemptyset(&action_server.sa_mask);
-	action_server.sa_flags = 0;
-	action_server.sa_handler = signal_manager_server;
+	action_server.sa_flags = SA_SIGINFO;
+	action_server.sa_sigaction = signal_manager_server;
 	sigaction(SIGUSR1, &action_server, NULL);
 	sigaction(SIGUSR2, &action_server, NULL);
 	while (1)
