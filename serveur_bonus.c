@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   serveur_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zamgar <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/06 19:24:46 by zamgar            #+#    #+#             */
+/*   Updated: 2024/10/06 19:24:47 by zamgar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
 void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
@@ -5,6 +17,7 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 	static int	i;
 	static char	octet;
 
+	(void)u_context;
 	if (signal == SIGUSR1)
 		octet = octet | 0;
 	else if (signal == SIGUSR2)
