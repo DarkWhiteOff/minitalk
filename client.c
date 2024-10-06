@@ -25,7 +25,7 @@ void	send_msg(pid_t serverpid, char c)
 			kill (serverpid, SIGUSR1);
 		else
 			kill(serverpid, SIGUSR2);
-		usleep(420);
+		usleep(425);
 		i--;
 	}
 }

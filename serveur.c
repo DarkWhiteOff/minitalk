@@ -14,32 +14,38 @@
 
 void	signal_manager_server(int signal)
 {
-	static int	i;
+	static int	i = 8;
 	static char	octet;
 
 	if (signal == SIGUSR1)
 		octet = octet | 0;
 	else if (signal == SIGUSR2)
 		octet = octet | 1;
-	i++;
-	if (i == 8)
+	i--;
+	if (i > 0)
+		octet = octet << 1;
+	else if (i == 0)
 	{
 		if (octet == 0)
 			ft_printf("\n");
 		else
 			ft_printf("%c", octet);
-		i = 0;
+		i = 8;
 		octet = 0;
 	}
-	else
-		octet = octet << 1;
 }
 
-int	main(void)
+int	main(int argc, char *argv[])
 {
 	struct sigaction	action_server;
 	pid_t				serverpid;
 
+	(void)argv;
+	if (argc != 1)
+	{
+		ft_printf("Error\n");
+		return (1);
+	}
 	serverpid = getpid();
 	ft_printf("Server ID : %d\n", serverpid);
 	sigemptyset(&action_server.sa_mask);
