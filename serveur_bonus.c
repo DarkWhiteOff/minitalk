@@ -16,7 +16,6 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 {
 	static int	i = 8;
 	static char	octet;
-	int check = 0;
 
 	(void)u_context;
 	if (signal == SIGUSR1)
@@ -31,16 +30,15 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 		if (octet == 0)
 		{
 			ft_printf("\n");
-			kill(info->si_pid, SIGUSR1);
-			check = 1;
+			kill(info->si_pid, SIGUSR2);
 		}
 		else
 			ft_printf("%c", octet);
 		i = 8;
 		octet = 0;
 	}
-	if ((signal == SIGUSR1 || signal == SIGUSR2) && check == 0)
-		kill(info->si_pid, SIGUSR2);
+	if ((signal == SIGUSR1 || signal == SIGUSR2))
+		kill(info->si_pid, SIGUSR1);
 }
 
 int	main(int argc, char *argv[])

@@ -12,6 +12,8 @@
 
 #include "minitalk_bonus.h"
 
+int	wait = 0;
+
 void	send_msg(pid_t serverpid, char c)
 {
 	int		i;
@@ -25,7 +27,9 @@ void	send_msg(pid_t serverpid, char c)
 			kill (serverpid, SIGUSR1);
 		else
 			kill(serverpid, SIGUSR2);
-		usleep(450);
+		while (wait == 0)
+			usleep(100);
+		wait = 0;
 		i--;
 	}
 }
@@ -33,6 +37,8 @@ void	send_msg(pid_t serverpid, char c)
 void	signal_manager_client(int signal)
 {
 	if (signal == SIGUSR1)
+		wait = 1;
+	else if (signal == SIGUSR2)
 		ft_printf("Message recieved\n");
 }
 
