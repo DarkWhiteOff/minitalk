@@ -5,18 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zamgar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 19:23:31 by zamgar            #+#    #+#             */
-/*   Updated: 2024/10/06 19:23:33 by zamgar           ###   ########.fr       */
+/*   Created: 2024/10/07 14:29:18 by zamgar            #+#    #+#             */
+/*   Updated: 2024/10/07 14:29:20 by zamgar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	signal_manager_server(int signal)
+void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 {
 	static int	i = 8;
 	static char	octet;
 
+	(void)u_context;
 	if (signal == SIGUSR1)
 		octet = octet | 0;
 	else if (signal == SIGUSR2)
@@ -33,6 +34,8 @@ void	signal_manager_server(int signal)
 		i = 8;
 		octet = 0;
 	}
+	if (signal == SIGUSR1 || signal == SIGUSR2)
+		kill(info->si_pid, SIGUSR2);
 }
 
 int	main(int argc, char *argv[])
@@ -49,8 +52,8 @@ int	main(int argc, char *argv[])
 	serverpid = getpid();
 	ft_printf("Server ID : %d\n", serverpid);
 	sigemptyset(&action_server.sa_mask);
-	action_server.sa_flags = 0;
-	action_server.sa_handler = signal_manager_server;
+	action_server.sa_flags = SA_SIGINFO;
+	action_server.sa_sigaction = signal_manager_server;
 	sigaction(SIGUSR1, &action_server, NULL);
 	sigaction(SIGUSR2, &action_server, NULL);
 	while (1)

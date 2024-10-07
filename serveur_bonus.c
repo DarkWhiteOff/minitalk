@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zamgar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 19:24:46 by zamgar            #+#    #+#             */
-/*   Updated: 2024/10/06 19:24:47 by zamgar           ###   ########.fr       */
+/*   Created: 2024/10/07 14:29:23 by zamgar            #+#    #+#             */
+/*   Updated: 2024/10/07 14:29:24 by zamgar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 {
 	static int	i = 8;
 	static char	octet;
+	int check = 0;
 
 	(void)u_context;
 	if (signal == SIGUSR1)
@@ -31,14 +32,15 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 		{
 			ft_printf("\n");
 			kill(info->si_pid, SIGUSR1);
+			check = 1;
 		}
 		else
 			ft_printf("%c", octet);
 		i = 8;
 		octet = 0;
 	}
-	if (signal == SIGUSR1 || signal == SIGUSR2)
-			kill(info->si_pid, SIGUSR2);
+	if ((signal == SIGUSR1 || signal == SIGUSR2) && check == 0)
+		kill(info->si_pid, SIGUSR2);
 }
 
 int	main(int argc, char *argv[])

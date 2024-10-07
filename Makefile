@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: zamgar <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/10/06 19:25:03 by zamgar            #+#    #+#              #
-#    Updated: 2024/10/06 19:25:04 by zamgar           ###   ########.fr        #
+#    Created: 2024/10/07 14:29:32 by zamgar            #+#    #+#              #
+#    Updated: 2024/10/07 14:29:34 by zamgar           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,13 +24,11 @@ SRCSERVER = serveur.c
 SRCCLIENT = client.c
 SRCSERVER_BONUS = serveur_bonus.c
 SRCCLIENT_BONUS = client_bonus.c
-PRINTF_SRC = ft_printf/ft_printf.c ft_printf/ft_hex.c ft_printf/ft_ptr.c ft_printf/ft_putcharstr.c ft_printf/ft_itoa.c ft_printf/ft_unsigned_itoa.c ft_printf/ft_strlen.c
 
 OBJSSERVER := $(SRCSERVER:%.c=%.o)
 OBJSCLIENT := $(SRCCLIENT:%.c=%.o)
 OBJSSERVER_BONUS := $(SRCSERVER_BONUS:%.c=%.o)
 OBJSCLIENT_BONUS := $(SRCCLIENT_BONUS:%.c=%.o)
-PRINTF_OBJS := $(PRINTF_SRC:%.c=%.o)
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -I ./includes
@@ -45,21 +43,21 @@ $(LIBFT_LIB):
 
 bonus : $(NAMESERVER_BONUS) $(NAMECLIENT_BONUS)
 
-$(NAMESERVER) : $(LIBFT_LIB) $(OBJSSERVER) $(PRINTF_OBJS)
-	$(CC) $(FLAGS) $(OBJSSERVER) $(LIBFT_LIB) $(PRINTF_OBJS) -o $(NAMESERVER)
+$(NAMESERVER) : $(LIBFT_LIB) $(OBJSSERVER)
+	$(CC) $(FLAGS) $(OBJSSERVER) $(LIBFT_LIB) -o $(NAMESERVER)
 
-$(NAMECLIENT) : $(LIBFT_LIB) $(OBJSCLIENT) $(PRINTF_OBJS)
-	$(CC) $(FLAGS) $(OBJSCLIENT) $(LIBFT_LIB) $(PRINTF_OBJS) -o $(NAMECLIENT)
+$(NAMECLIENT) : $(LIBFT_LIB) $(OBJSCLIENT)
+	$(CC) $(FLAGS) $(OBJSCLIENT) $(LIBFT_LIB) -o $(NAMECLIENT)
 
-$(NAMESERVER_BONUS) : $(LIBFT_LIB) $(OBJSSERVER_BONUS) $(PRINTF_OBJS)
-	$(CC) $(FLAGS) $(OBJSSERVER_BONUS) $(LIBFT_LIB) $(PRINTF_OBJS) -o $(NAMESERVER_BONUS)
+$(NAMESERVER_BONUS) : $(LIBFT_LIB) $(OBJSSERVER_BONUS)
+	$(CC) $(FLAGS) $(OBJSSERVER_BONUS) $(LIBFT_LIB) -o $(NAMESERVER_BONUS)
 
-$(NAMECLIENT_BONUS) : $(LIBFT_LIB) $(OBJSCLIENT_BONUS) $(PRINTF_OBJS)
-	$(CC) $(FLAGS) $(OBJSCLIENT_BONUS) $(LIBFT_LIB) $(PRINTF_OBJS) -o $(NAMECLIENT_BONUS)
+$(NAMECLIENT_BONUS) : $(LIBFT_LIB) $(OBJSCLIENT_BONUS)
+	$(CC) $(FLAGS) $(OBJSCLIENT_BONUS) $(LIBFT_LIB) -o $(NAMECLIENT_BONUS)
 
 clean:
 	make clean -sC $(LIBFT_PATH)
-	rm -rf $(OBJSSERVER) $(OBJSCLIENT) $(OBJSSERVER_BONUS) $(OBJSCLIENT_BONUS) $(PRINTF_OBJS)
+	rm -rf $(OBJSSERVER) $(OBJSCLIENT) $(OBJSSERVER_BONUS) $(OBJSCLIENT_BONUS)
 
 fclean: clean
 	make fclean -sC $(LIBFT_PATH)

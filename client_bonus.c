@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zamgar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 19:25:14 by zamgar            #+#    #+#             */
-/*   Updated: 2024/10/06 19:25:16 by zamgar           ###   ########.fr       */
+/*   Created: 2024/10/07 14:29:03 by zamgar            #+#    #+#             */
+/*   Updated: 2024/10/07 14:29:05 by zamgar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	send_msg(pid_t serverpid, char c)
 			kill (serverpid, SIGUSR1);
 		else
 			kill(serverpid, SIGUSR2);
-		usleep(100);
+		usleep(450);
 		i--;
 	}
 }

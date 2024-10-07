@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zamgar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/06 19:21:47 by zamgar            #+#    #+#             */
-/*   Updated: 2024/10/06 19:21:48 by zamgar           ###   ########.fr       */
+/*   Created: 2024/10/07 14:29:13 by zamgar            #+#    #+#             */
+/*   Updated: 2024/10/07 14:29:14 by zamgar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,23 @@ void	send_msg(pid_t serverpid, char c)
 			kill (serverpid, SIGUSR1);
 		else
 			kill(serverpid, SIGUSR2);
-		usleep(425);
+		usleep(450);
 		i--;
 	}
+}
+
+void	signal_manager_client(int signal)
+{
+	(void)signal;
+	return ;
 }
 
 int	main(int argc, char *argv[])
 {
 	int	i;
 
+	signal(SIGUSR1, signal_manager_client);
+	signal(SIGUSR2, signal_manager_client);
 	if (argc == 3)
 	{
 		i = 0;
