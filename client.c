@@ -12,6 +12,8 @@
 
 #include "minitalk.h"
 
+int	g_wait = 0;
+
 void	send_msg(pid_t serverpid, char c)
 {
 	int		i;
@@ -25,15 +27,17 @@ void	send_msg(pid_t serverpid, char c)
 			kill (serverpid, SIGUSR1);
 		else
 			kill(serverpid, SIGUSR2);
-		usleep(450);
+		while (g_wait == 0)
+			usleep(100);
+		g_wait = 0;
 		i--;
 	}
 }
 
 void	signal_manager_client(int signal)
 {
-	(void)signal;
-	return ;
+	if (signal == SIGUSR1)
+		g_wait = 1;
 }
 
 int	main(int argc, char *argv[])

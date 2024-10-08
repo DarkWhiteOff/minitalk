@@ -35,7 +35,7 @@ void	signal_manager_server(int signal, siginfo_t *info, void *u_context)
 		octet = 0;
 	}
 	if (signal == SIGUSR1 || signal == SIGUSR2)
-		kill(info->si_pid, SIGUSR2);
+		kill(info->si_pid, SIGUSR1);
 }
 
 int	main(int argc, char *argv[])
