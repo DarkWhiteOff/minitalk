@@ -14,7 +14,7 @@ NAMESERVER = serveur
 NAMECLIENT = client
 
 NAMESERVER_BONUS = serveur_bonus
-NAMECLIENT_BONUS = client_bonus
+NAMECLIENT_BONUS = client
 
 LIBFT_PATH = ./libft/
 LIBFT_NAME = libft.a

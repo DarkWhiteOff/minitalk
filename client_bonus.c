@@ -28,7 +28,7 @@ void	send_msg(pid_t serverpid, char c)
 		else
 			kill(serverpid, SIGUSR2);
 		while (g_wait == 0)
-			usleep(100);
+			;
 		g_wait = 0;
 		i--;
 	}
@@ -48,20 +48,17 @@ int	main(int argc, char *argv[])
 
 	signal(SIGUSR1, signal_manager_client);
 	signal(SIGUSR2, signal_manager_client);
-	if (argc == 3)
-	{
-		i = 0;
-		while (argv[2][i] != '\0')
-		{
-			send_msg(ft_atoi(argv[1]), argv[2][i]);
-			i++;
-		}
-		send_msg(ft_atoi(argv[1]), '\0');
-	}
-	else
+	if (argc != 3)
 	{
 		ft_printf("Error\n");
 		return (1);
 	}
+	i = 0;
+	while (argv[2][i] != '\0')
+	{
+		send_msg(ft_atoi(argv[1]), argv[2][i]);
+		i++;
+	}
+	send_msg(ft_atoi(argv[1]), '\0');
 	return (0);
 }
