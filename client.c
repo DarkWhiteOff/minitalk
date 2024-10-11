@@ -45,7 +45,6 @@ int	main(int argc, char *argv[])
 	int	i;
 
 	signal(SIGUSR1, signal_manager_client);
-	signal(SIGUSR2, signal_manager_client);
 	if (argc != 3)
 	{
 		ft_printf("Error\n");
